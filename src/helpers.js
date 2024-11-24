@@ -1,12 +1,4 @@
-export const gameBoards = () => {
-	const gamesBoardDiv = document.createElement('div');
-	gamesBoardDiv.classList.add('gamesboard-container');
-  gamesBoardDiv.append(renderBoard('player-one'), renderBoard('player-two'))
-
-	return gamesBoardDiv;
-};
-
-export const renderBoard = (player, gameboard = '') => {
+export const renderBoard = (player, gameboard) => {
 	const width = 10;
 
 	const gameBoardContainer = document.createElement('div');
@@ -14,12 +6,16 @@ export const renderBoard = (player, gameboard = '') => {
 	gameBoardContainer.setAttribute('id', player)
 
 	for (let i = 0; i < width * width; i++) {
-		
 		const block = document.createElement('div');
 		block.classList.add('block');
+		if (gameboard[i] !== undefined) {
+			const shipType = gameboard[i]['name']
+			block.classList.add(shipType)
+		}
 		block.id = i;
 		gameBoardContainer.append(block);
 	}
 
-	return gameBoardContainer;
+	const gamesBoardContainer = document.querySelector('.gamesboard-container')
+	gamesBoardContainer.append(gameBoardContainer)
 }

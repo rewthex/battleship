@@ -22,7 +22,7 @@ export class Gameboard {
 			submarine: new Ship('submarine', 3),
 			destroyer: new Ship('destroyer', 2),
 		};
-		this.missedShots = [];
+		this.attacks = [];
 	}
 	placeShip(type, start, isVertical = false) {
 		const shipLength = this.ships[type].length;
@@ -34,7 +34,7 @@ export class Gameboard {
 	}
 	randomizeShips() {
 		const randomNumber = Math.floor(Math.random() * 5);
-		
+
 		switch (randomNumber) {
 			case 0:
 				this.placeShip('carrier', 0, true);
@@ -74,19 +74,25 @@ export class Gameboard {
 		}
 	}
 	receiveAttack(coord) {
+		if (this.attacks.includes(coord)) return;
 		const result = this.board[coord];
 		if (result !== undefined) {
 			result.hit();
+			return 'hit';
 		} else {
-			this.missedShots.push(coord);
+			this.attacks.push(coord);
+			return 'miss';
 		}
+	}
+	allShipsSunk() {
+		return Object.values(this.ships).every(ship => ship.isSunk())
 	}
 }
 
 export class Player {
-	constructor(name, type = 'human') {
+	constructor(name, playerNumber) {
 		this.name = name;
-		this.type = type;
+		this.playerNumber = playerNumber;
 		this.gameboard = new Gameboard();
 	}
 }

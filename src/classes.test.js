@@ -40,22 +40,51 @@ describe('gameboard', () => {
 		expect(gameboard.board[0].isSunk()).toBe(true);
 	});
 
-	test('keeps track of missed shots', () => {
+	test('keeps track of attacks', () => {
 		gameboard.receiveAttack(95);
 		gameboard.receiveAttack(96);
 		gameboard.receiveAttack(97);
 		gameboard.receiveAttack(98);
-		expect(gameboard.missedShots.length).toBe(4);
+		expect(gameboard.attacks.length).toBe(4);
 	});
+
+	test('reports if all ships have been sunk', () => {
+		expect(gameboard.allShipsSunk()).toBe(false);
+
+		gameboard.ships['carrier'].hit();
+		gameboard.ships['carrier'].hit();
+		gameboard.ships['carrier'].hit();
+		gameboard.ships['carrier'].hit();
+		gameboard.ships['carrier'].hit();
+
+		gameboard.ships['battleship'].hit();
+		gameboard.ships['battleship'].hit();
+		gameboard.ships['battleship'].hit();
+		gameboard.ships['battleship'].hit();
+
+		gameboard.ships['cruiser'].hit();
+		gameboard.ships['cruiser'].hit();
+		gameboard.ships['cruiser'].hit();
+		
+		gameboard.ships['submarine'].hit();
+		gameboard.ships['submarine'].hit();
+		gameboard.ships['submarine'].hit();
+
+		gameboard.ships['destroyer'].hit();
+		expect(gameboard.allShipsSunk()).toBe(false);
+		gameboard.ships['destroyer'].hit();
+
+		expect(gameboard.allShipsSunk()).toBe(true);
+	})
 });
 
 describe('player', () => {
-	const humanPlayer = new Player('Aaron', 'Human');
-	const computerPlayer = new Player('Hal', 'Computer');
+	const humanPlayer = new Player('Aaron', 'player-one');
+	const computerPlayer = new Player('Hal', 'player-two');
 
 	expect(humanPlayer.name).toBe('Aaron');
-	expect(humanPlayer.type).toBe('Human');
+	expect(humanPlayer.playerNumber).toBe('player-one');
 
 	expect(computerPlayer.name).toBe('Hal');
-	expect(computerPlayer.type).toBe('Computer');
+	expect(computerPlayer.playerNumber).toBe('player-two');
 });
