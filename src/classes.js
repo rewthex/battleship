@@ -32,6 +32,47 @@ export class Gameboard {
 			this.board[start + i * increment] = this.ships[type];
 		}
 	}
+	randomizeShips() {
+		const randomNumber = Math.floor(Math.random() * 5);
+		
+		switch (randomNumber) {
+			case 0:
+				this.placeShip('carrier', 0, true);
+				this.placeShip('battleship', 22, false);
+				this.placeShip('cruiser', 49, true);
+				this.placeShip('submarine', 55, false);
+				this.placeShip('destroyer', 97, false);
+				break;
+			case 1:
+				this.placeShip('carrier', 5, false);
+				this.placeShip('battleship', 10, false);
+				this.placeShip('cruiser', 30, true);
+				this.placeShip('submarine', 65, true);
+				this.placeShip('destroyer', 88, true);
+				break;
+			case 2:
+				this.placeShip('carrier', 91, false);
+				this.placeShip('battleship', 9, true);
+				this.placeShip('cruiser', 33, true);
+				this.placeShip('submarine', 45, false);
+				this.placeShip('destroyer', 20, false);
+				break;
+			case 3:
+				this.placeShip('carrier', 50, false);
+				this.placeShip('battleship', 81, false);
+				this.placeShip('cruiser', 12, true);
+				this.placeShip('submarine', 48, true);
+				this.placeShip('destroyer', 6, true);
+				break;
+			case 4:
+				this.placeShip('carrier', 15, true);
+				this.placeShip('battleship', 84, false);
+				this.placeShip('cruiser', 41, true);
+				this.placeShip('submarine', 59, true);
+				this.placeShip('destroyer', 33, true);
+				break;
+		}
+	}
 	receiveAttack(coord) {
 		const result = this.board[coord];
 		if (result !== undefined) {
@@ -45,7 +86,7 @@ export class Gameboard {
 export class Player {
 	constructor(name, type = 'human') {
 		this.name = name;
-    this.type = type;
+		this.type = type;
 		this.gameboard = new Gameboard();
 	}
 }

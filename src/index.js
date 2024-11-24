@@ -1,31 +1,44 @@
 import { Player } from './classes';
-import {
-	gameInfo,
-	gameBoards,
-	optionContainer,
-	buttonContainer,
-} from './gamearea';
-import { flip } from './gamehelpers';
 import './styles.css'
 
-const gameController = () => {
-  const humanPlayer = new Player('Aaron', 'human')
-  const computerPlayer = new Player('Hal', 'computer')
+const humanPlayer = new Player('Aaron', 'human')
+humanPlayer.gameboard.randomizeShips();
 
-  return { humanPlayer, computerPlayer }
+const computerPlayer = new Player('Hal', 'computer')
+computerPlayer.gameboard.randomizeShips();
+
+const renderBoard = (player, gameboard) => {
+    const width = 10;
+  
+    const gameBoardContainer = document.createElement('div');
+    gameBoardContainer.classList.add('game-board');
+    gameBoardContainer.setAttribute('id', player)
+  
+    for (let i = 0; i < width * width; i++) {
+      const block = document.createElement('div');
+      block.classList.add('block');
+      if (gameboard[i] !== undefined) {
+        const shipType = gameboard[i]['name']
+        block.classList.add(shipType)
+      }
+      block.id = i;
+      gameBoardContainer.append(block);
+    }
+  
+    const gamesBoardContainer = document.querySelector('.gamesboard-container')
+    gamesBoardContainer.append(gameBoardContainer)
 }
 
-const game = gameController();
+renderBoard('player-one', humanPlayer.gameboard.board)
+renderBoard('player-one', computerPlayer.gameboard.board)
 
-const screenController = () => {
-  document.body.append(
-    gameInfo(),
-    gameBoards('player-one', 'player-two'),
-    optionContainer(),
-    buttonContainer()
-  );
-  const flipButton = document.querySelector('#flip-button')
-  flipButton.addEventListener('click', flip)
+const startGame = () => {
+  const playerOneContainer = document.querySelector('#player-one')
+  const playerTwoContainer = document.querySelector('#player-two')
+  playerOneContainer.addEventListener('click', (e) => {
+    console.log(e);
+  })
+  playerTwoContainer.addEventListener('click', (e) => {
+    console.log(e);
+  })
 }
-
-const screen = screenController();
