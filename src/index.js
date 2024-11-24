@@ -2,48 +2,94 @@ import { Player } from './classes';
 import { renderBoard } from './helpers';
 import './styles.css';
 
-const playerOne = new Player('Aaron', 'player-one');
-playerOne.gameboard.randomizeShips();
+const gameController = (() => {
+	const players = [
+		new Player('Aaron', 'player-one'),
+		new Player('Hal', 'player-two'),
+	];
 
-const playerTwo = new Player('Hal', 'player-two');
-playerTwo.gameboard.randomizeShips();
+	let activePlayer = players[0];
 
-renderBoard('player-one', playerOne.gameboard.board);
-renderBoard('player-two', playerTwo.gameboard.board);
+	const getPlayers = () => players;
 
-let attackingPlayer = playerOne;
-let nonAttackingPlayer = playerTwo;
+	const randomizeShips = () => {
+		players[0].gameboard.randomizeShips();
+		players[1].gameboard.randomizeShips();
+	};
 
-const startGame = () => {
-	const playerOneContainer = document.querySelector('#player-one');
-	const playerTwoContainer = document.querySelector('#player-two');
-	playerOneContainer.addEventListener('click', handleGridClick);
-	playerTwoContainer.addEventListener('click', handleGridClick);
-	const playerTurnSpan = document.querySelector('#turn-display');
-	playerTurnSpan.innerText = attackingPlayer.name;
-};
+	const switchPlayerTurn = () => {
+		activePlayer = activePlayer === players[0] ? players[1] : players[0];
+	};
 
-const switchPlayerTurn = (result, coord) => {
-	[attackingPlayer, nonAttackingPlayer] = [nonAttackingPlayer, attackingPlayer];
-	const playerTurnSpan = document.querySelector('#turn-display');
-	playerTurnSpan.innerText = attackingPlayer.name;
-	const infoSpan = document.querySelector('#info');
-	if (result === 'hit') {
-    infoSpan.innerText = `${nonAttackingPlayer.name} landed a hit at coordinate ${coord}`
-  } else {
-    infoSpan.innerText = `${nonAttackingPlayer.name} missed at coordinate ${coord}`
-  }
-};
+	const getActivePlayer = () => activePlayer;
+	const getNonActivePlayer = () =>
+		activePlayer === players[0] ? players[1] : players[0];
 
-const handleGridClick = (e) => {
-	const cell = e.target;
-	const playerBoard = e.currentTarget.id;
-	if (playerBoard !== nonAttackingPlayer.playerNumber) return;
-	const result = nonAttackingPlayer.gameboard.receiveAttack(cell.id);
-	if (!result) return;
-	cell.classList.add(result);
-	switchPlayerTurn(result, cell.id);
-};
+	const gameOver = () =>
+		getActivePlayer().gameboard.allShipsSunk ||
+		getNonActivePlayer().gameboard.allShipsSunk();
 
-const startButton = document.querySelector('#start');
-startButton.addEventListener('click', startGame);
+	const receiveAttack = (coord) =>
+		getNonActivePlayer.gameboard.receiveAttack(coord);
+
+	return {
+		getPlayers,
+		randomizeShips,
+		switchPlayerTurn,
+		getActivePlayer,
+		getNonActivePlayer,
+		gameOver,
+		receiveAttack,
+	};
+})();
+
+const screenController = (() => {
+	const gamesBoardContainer = document.querySelector('.gamesboard-container');
+
+	const renderBoards = () => {
+		const players = gameController.getPlayers();
+		gamesBoardContainer.append(
+			renderBoard('player-one', players[0].gameboard.board)
+		);
+		gamesBoardContainer.append(
+			renderBoard('player-two', players[1].gameboard.board)
+		);
+	};
+
+	renderBoards();
+})();
+
+// let attackingPlayer = playerOne;
+// let nonAttackingPlayer = playerTwo;
+
+// const startGame = () => {
+// 	playerOneContainer.addEventListener('click', handleGridClick);
+// 	playerTwoContainer.addEventListener('click', handleGridClick);
+// 	const playerTurnSpan = document.querySelector('#turn-display');
+// 	playerTurnSpan.innerText = attackingPlayer.name;
+// };
+
+// const switchPlayerTurn = (result, coord) => {
+// 	[attackingPlayer, nonAttackingPlayer] = [nonAttackingPlayer, attackingPlayer];
+// 	const playerTurnSpan = document.querySelector('#turn-display');
+// 	playerTurnSpan.innerText = attackingPlayer.name;
+// 	const infoSpan = document.querySelector('#info');
+// 	if (result === 'hit') {
+// 		infoSpan.innerText = `${nonAttackingPlayer.name} landed a hit at coordinate ${coord}`;
+// 	} else {
+// 		infoSpan.innerText = `${nonAttackingPlayer.name} missed at coordinate ${coord}`;
+// 	}
+// };
+
+// const handleGridClick = (e) => {
+// 	const cell = e.target;
+// 	const playerBoard = e.currentTarget.id;
+// 	if (playerBoard !== nonAttackingPlayer.playerNumber) return;
+// 	const result = nonAttackingPlayer.gameboard.receiveAttack(cell.id);
+// 	if (!result) return;
+// 	cell.classList.add(result);
+// 	switchPlayerTurn(result, cell.id);
+// };
+
+// const startButton = document.querySelector('#start');
+// startButton.addEventListener('click', startGame);
