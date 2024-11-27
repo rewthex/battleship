@@ -9,8 +9,11 @@ export const renderBoard = (player, gameboard = '') => {
 		const block = document.createElement('div');
 		block.classList.add('block');
 		if (gameboard[i] !== undefined) {
-			const shipType = gameboard[i]['name'];
-			block.classList.add(shipType);
+			if (gameboard[i]['name']) {
+				block.classList.add(gameboard[i]['name'])
+			} else {
+				block.classList.add(gameboard[i])
+			}
 		}
 		block.id = i;
 		gameBoardContainer.append(block);

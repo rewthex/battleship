@@ -75,12 +75,14 @@ export class Gameboard {
 	}
 	receiveAttack(coord) {
 		if (this.attacks.includes(coord)) return;
+		this.attacks.push(coord);
 		const result = this.board[coord];
 		if (result !== undefined) {
 			result.hit();
+			this.board[coord] = 'hit'
 			return 'hit';
 		} else {
-			this.attacks.push(coord);
+			this.board[coord] = 'miss'
 			return 'miss';
 		}
 	}

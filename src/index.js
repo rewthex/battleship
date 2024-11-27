@@ -2,20 +2,28 @@ import { Player } from './classes';
 import { renderBoard } from './helpers';
 import './styles.css';
 
-const gameController = (() => {
+const GameController = (
+	playerOneName = 'Player One',
+	playerTwoName = 'Player Two'
+) => {
 	const players = [
-		new Player('Aaron', 'player-one'),
-		new Player('Hal', 'player-two'),
+		new Player(playerOneName, 'player-one'),
+		new Player(playerTwoName, 'player-two'),
 	];
 
 	let activePlayer = players[0];
+	let lastRoundResult = 'Prepare for BATTLESHIP!'
 
 	const getPlayers = () => players;
+
+	const getLastRoundResult = () => lastRoundResult;
 
 	const randomizeShips = () => {
 		players[0].gameboard.randomizeShips();
 		players[1].gameboard.randomizeShips();
 	};
+
+	randomizeShips();
 
 	const switchPlayerTurn = () => {
 		activePlayer = activePlayer === players[0] ? players[1] : players[0];
@@ -25,29 +33,44 @@ const gameController = (() => {
 	const getNonActivePlayer = () =>
 		activePlayer === players[0] ? players[1] : players[0];
 
-	const gameOver = () =>
-		getActivePlayer().gameboard.allShipsSunk ||
+	const gameOver = () => {
+		getActivePlayer().gameboard.allShipsSunk() ||
 		getNonActivePlayer().gameboard.allShipsSunk();
+	}
 
-	const receiveAttack = (coord) =>
-		getNonActivePlayer.gameboard.receiveAttack(coord);
+	const playRound = (coord) => {
+		const result = getNonActivePlayer().gameboard.receiveAttack(coord);
+		lastRoundResult = `${getActivePlayer().name} ${result}`
+		switchPlayerTurn();
+	}
 
 	return {
+		getLastRoundResult,
 		getPlayers,
 		randomizeShips,
 		switchPlayerTurn,
 		getActivePlayer,
 		getNonActivePlayer,
 		gameOver,
-		receiveAttack,
+		playRound,
 	};
-})();
+};
 
-const screenController = (() => {
+const ScreenController = () => {
+	const game = GameController();
 	const gamesBoardContainer = document.querySelector('.gamesboard-container');
+	const playerTurnSpan = document.querySelector('#turn-display')
+	const gameInfoSpan = document.querySelector('#last-play')
 
-	const renderBoards = () => {
-		const players = gameController.getPlayers();
+	const updateScreen = () => {
+		const players = game.getPlayers();
+		gamesBoardContainer.innerHTML = "";
+		playerTurnSpan.innerText = `${game.getActivePlayer().name}'s turn to go!`
+		if (game.getLastRoundResult() === '') {
+			gameInfoSpan.innerText = 'nothing yet'
+		} else {
+			gameInfoSpan.innerText = game.getLastRoundResult();
+		}
 		gamesBoardContainer.append(
 			renderBoard('player-one', players[0].gameboard.board)
 		);
@@ -56,40 +79,17 @@ const screenController = (() => {
 		);
 	};
 
-	renderBoards();
-})();
+	updateScreen();
 
-// let attackingPlayer = playerOne;
-// let nonAttackingPlayer = playerTwo;
+	function clickHandlerBoard(e) {
+		const playerBoard = e.target.parentElement.id;
+		if (playerBoard === game.getActivePlayer().playerNumber) return;
+		const cell = e.target.id;
+		game.playRound(cell)
+		updateScreen();
+	}
 
-// const startGame = () => {
-// 	playerOneContainer.addEventListener('click', handleGridClick);
-// 	playerTwoContainer.addEventListener('click', handleGridClick);
-// 	const playerTurnSpan = document.querySelector('#turn-display');
-// 	playerTurnSpan.innerText = attackingPlayer.name;
-// };
+	gamesBoardContainer.addEventListener('click', clickHandlerBoard)
+};
 
-// const switchPlayerTurn = (result, coord) => {
-// 	[attackingPlayer, nonAttackingPlayer] = [nonAttackingPlayer, attackingPlayer];
-// 	const playerTurnSpan = document.querySelector('#turn-display');
-// 	playerTurnSpan.innerText = attackingPlayer.name;
-// 	const infoSpan = document.querySelector('#info');
-// 	if (result === 'hit') {
-// 		infoSpan.innerText = `${nonAttackingPlayer.name} landed a hit at coordinate ${coord}`;
-// 	} else {
-// 		infoSpan.innerText = `${nonAttackingPlayer.name} missed at coordinate ${coord}`;
-// 	}
-// };
-
-// const handleGridClick = (e) => {
-// 	const cell = e.target;
-// 	const playerBoard = e.currentTarget.id;
-// 	if (playerBoard !== nonAttackingPlayer.playerNumber) return;
-// 	const result = nonAttackingPlayer.gameboard.receiveAttack(cell.id);
-// 	if (!result) return;
-// 	cell.classList.add(result);
-// 	switchPlayerTurn(result, cell.id);
-// };
-
-// const startButton = document.querySelector('#start');
-// startButton.addEventListener('click', startGame);
+ScreenController();
