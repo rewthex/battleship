@@ -12,7 +12,7 @@ const GameController = (
 	];
 
 	let activePlayer = players[0];
-	let lastRoundResult = 'Prepare for BATTLESHIP!'
+	let lastRoundResult = 'Prepare for BATTLESHIP!';
 
 	const getPlayers = () => players;
 
@@ -35,14 +35,17 @@ const GameController = (
 
 	const gameOver = () => {
 		getActivePlayer().gameboard.allShipsSunk() ||
-		getNonActivePlayer().gameboard.allShipsSunk();
-	}
+			getNonActivePlayer().gameboard.allShipsSunk();
+	};
 
 	const playRound = (coord) => {
 		const result = getNonActivePlayer().gameboard.receiveAttack(coord);
-		lastRoundResult = `${getActivePlayer().name} ${result}`
+		lastRoundResult =
+			result === 'hit'
+				? `${getActivePlayer().name} struck a ship at ${coord}`
+				: `${getActivePlayer().name} missed at ${coord}`;
 		switchPlayerTurn();
-	}
+	};
 
 	return {
 		getLastRoundResult,
@@ -59,18 +62,14 @@ const GameController = (
 const ScreenController = () => {
 	const game = GameController();
 	const gamesBoardContainer = document.querySelector('.gamesboard-container');
-	const playerTurnSpan = document.querySelector('#turn-display')
-	const gameInfoSpan = document.querySelector('#last-play')
+	const playerTurnSpan = document.querySelector('#turn-display');
+	const gameInfoSpan = document.querySelector('#last-play');
 
 	const updateScreen = () => {
 		const players = game.getPlayers();
-		gamesBoardContainer.innerHTML = "";
-		playerTurnSpan.innerText = `${game.getActivePlayer().name}'s turn to go!`
-		if (game.getLastRoundResult() === '') {
-			gameInfoSpan.innerText = 'nothing yet'
-		} else {
-			gameInfoSpan.innerText = game.getLastRoundResult();
-		}
+		gamesBoardContainer.innerHTML = '';
+		playerTurnSpan.innerText = `${game.getActivePlayer().name}'s turn to go!`;
+		gameInfoSpan.innerText = game.getLastRoundResult();
 		gamesBoardContainer.append(
 			renderBoard('player-one', players[0].gameboard.board)
 		);
@@ -82,14 +81,15 @@ const ScreenController = () => {
 	updateScreen();
 
 	function clickHandlerBoard(e) {
-		const playerBoard = e.target.parentElement.id;
-		if (playerBoard === game.getActivePlayer().playerNumber) return;
-		const cell = e.target.id;
-		game.playRound(cell)
+		const cell = e.target.dataset.id;
+		const playerNumberBoard = e.target.parentElement.id;
+		const activePlayerNumber = game.getActivePlayer().playerNumber;
+		if (!cell || playerNumberBoard === activePlayerNumber) return;
+		game.playRound(cell);
 		updateScreen();
 	}
 
-	gamesBoardContainer.addEventListener('click', clickHandlerBoard)
+	gamesBoardContainer.addEventListener('click', clickHandlerBoard);
 };
 
 ScreenController();
