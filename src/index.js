@@ -28,22 +28,35 @@ const GameController = (
 	const switchPlayerTurn = () => {
 		activePlayer = activePlayer === players[0] ? players[1] : players[0];
 	};
-
 	const getActivePlayer = () => activePlayer;
 	const getNonActivePlayer = () =>
 		activePlayer === players[0] ? players[1] : players[0];
 
 	const gameOver = () => {
-		getActivePlayer().gameboard.allShipsSunk() ||
-			getNonActivePlayer().gameboard.allShipsSunk();
+		return (
+			getActivePlayer().gameboard.allShipsSunk() ||
+			getNonActivePlayer().gameboard.allShipsSunk()
+		);
+	};
+
+	const resetGame = () => {
+		players[0] = new Player(playerOneName, 'player-one');
+		players[1] = new Player(playerTwoName, 'player-two');
+		randomizeShips();
+		activePlayer = players[0];
 	};
 
 	const playRound = (coord) => {
 		const result = getNonActivePlayer().gameboard.receiveAttack(coord);
+		if (!result) return;
 		lastRoundResult =
 			result === 'hit'
 				? `${getActivePlayer().name} struck a ship at ${coord}`
 				: `${getActivePlayer().name} missed at ${coord}`;
+		if (gameOver()) {
+			lastRoundResult = `${getActivePlayer().name} has won the game!`;
+			return;
+		}
 		switchPlayerTurn();
 	};
 
@@ -55,12 +68,14 @@ const GameController = (
 		getActivePlayer,
 		getNonActivePlayer,
 		gameOver,
+		resetGame,
 		playRound,
 	};
 };
 
 const ScreenController = () => {
 	const game = GameController();
+
 	const gamesBoardContainer = document.querySelector('.gamesboard-container');
 	const playerTurnSpan = document.querySelector('#turn-display');
 	const gameInfoSpan = document.querySelector('#last-play');
@@ -78,18 +93,30 @@ const ScreenController = () => {
 		);
 	};
 
-	updateScreen();
-
-	function clickHandlerBoard(e) {
+	const clickHandlerBoard = (e) => {
 		const cell = e.target.dataset.id;
 		const playerNumberBoard = e.target.parentElement.id;
 		const activePlayerNumber = game.getActivePlayer().playerNumber;
 		if (!cell || playerNumberBoard === activePlayerNumber) return;
 		game.playRound(cell);
 		updateScreen();
-	}
+	};
 
-	gamesBoardContainer.addEventListener('click', clickHandlerBoard);
+	const startGame = () => {
+		gamesBoardContainer.addEventListener('click', clickHandlerBoard);
+	};
+
+	const resetGame = () => {
+		game.resetGame();
+		updateScreen();
+	};
+
+	const startButton = document.querySelector('#start');
+	const resetButton = document.querySelector('#reset');
+
+	startButton.addEventListener('click', startGame);
+	resetButton.addEventListener('click', resetGame);
+	updateScreen();
 };
 
 ScreenController();

@@ -79,15 +79,15 @@ export class Gameboard {
 		const result = this.board[coord];
 		if (result !== undefined) {
 			result.hit();
-			this.board[coord] = 'hit'
+			this.board[coord] = 'hit';
 			return 'hit';
 		} else {
-			this.board[coord] = 'miss'
+			this.board[coord] = 'miss';
 			return 'miss';
 		}
 	}
 	allShipsSunk() {
-		return Object.values(this.ships).every(ship => ship.isSunk())
+		return Object.values(this.ships).every((ship) => ship.isSunk());
 	}
 }
 
