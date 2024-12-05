@@ -76,9 +76,10 @@ const GameController = (
 const ScreenController = () => {
 	const game = GameController();
 
-	const gamesBoardContainer = document.querySelector('.gamesboard-container');
 	const playerTurnSpan = document.querySelector('#turn-display');
 	const gameInfoSpan = document.querySelector('#last-play');
+	const gamesBoardContainer = document.querySelector('.gamesboard-container');
+	const optionContainer = document.querySelector('.option-container')
 
 	const updateScreen = () => {
 		const players = game.getPlayers();
@@ -86,10 +87,10 @@ const ScreenController = () => {
 		playerTurnSpan.innerText = `${game.getActivePlayer().name}'s turn to go!`;
 		gameInfoSpan.innerText = game.getLastRoundResult();
 		gamesBoardContainer.append(
-			renderBoard('player-one', players[0].gameboard.board)
+			renderBoard('player-one', players[0].gameboard.board, true)
 		);
 		gamesBoardContainer.append(
-			renderBoard('player-two', players[1].gameboard.board)
+			renderBoard('player-two', players[1].gameboard.board, false)
 		);
 	};
 
@@ -102,7 +103,14 @@ const ScreenController = () => {
 		updateScreen();
 	};
 
+	const randomize = () => {
+		game.resetGame();
+		updateScreen();
+	}
+
 	const startGame = () => {
+		game.resetGame();
+		updateScreen();
 		gamesBoardContainer.addEventListener('click', clickHandlerBoard);
 	};
 
@@ -111,9 +119,11 @@ const ScreenController = () => {
 		updateScreen();
 	};
 
+	const randomizeButton = document.querySelector('#randomize')
 	const startButton = document.querySelector('#start');
 	const resetButton = document.querySelector('#reset');
 
+	randomizeButton.addEventListener('click', randomize)
 	startButton.addEventListener('click', startGame);
 	resetButton.addEventListener('click', resetGame);
 	updateScreen();

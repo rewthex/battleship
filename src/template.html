@@ -6,23 +6,22 @@
 		<title>Battleship</title>
 	</head>
 	<body>
-		<div id="game-info">
-			<p>Turn: <span id="turn-display"></span></p>
-			<p>Info: <span id="last-play"></span></p>
+		<div class="container">
+			<div class="header">
+				<h1 class="logo">BATTLESHIP</h1>
+			</div>
+			<div class="game-area">
+				<div class="game-info">
+					<p id="turn-display"></p>
+					<p id="last-play"></p>
+				</div>
+				<div class="gamesboard-container"></div>
+				<div class="controls">
+					<button type="button" id="randomize">Randomize</button>
+					<button type="button" id="start">Start</button>
+					<button type="button" id="reset">Reset</button>
+				</div>
+			</div>
 		</div>
-
-		<div class="gamesboard-container"></div>
-
-		<div class="option-container">
-			<div class="destroyer-preview destroyer" draggable="true"></div>
-			<div class="submarine-preview submarine" draggable="true"></div>
-			<div class="cruiser-preview cruiser" draggable="true"></div>
-			<div class="battleship-preview battleship" draggable="true"></div>
-			<div class="carrier-preview carrier" draggable="true"></div>
-		</div>
-
-		<button type="button" id="start">Start Game</button>
-		<button type="button" id="reset">Reset Game</button>
-
 	</body>
 </html>
