@@ -1,6 +1,8 @@
-import { Player } from './classes';
+import { Player, Draggables } from './classes';
 import { renderBoard } from './helpers';
 import './styles.css';
+
+const ships = ['carrier', 'battleship', 'cruiser', 'submarine', 'destroyer']
 
 const GameController = (
 	playerOneName = 'Player One',
@@ -23,7 +25,11 @@ const GameController = (
 		players[1].gameboard.randomizeShips();
 	};
 
-	randomizeShips();
+	const placeShip = (type, start) => {
+		start = Number(start)
+		return players[0].gameboard.placeShip(type, start)
+		
+	}
 
 	const switchPlayerTurn = () => {
 		activePlayer = activePlayer === players[0] ? players[1] : players[0];
@@ -39,14 +45,8 @@ const GameController = (
 		);
 	};
 
-	const resetGame = () => {
-		players[0] = new Player(playerOneName, 'player-one');
-		players[1] = new Player(playerTwoName, 'player-two');
-		randomizeShips();
-		activePlayer = players[0];
-	};
-
 	const playRound = (coord) => {
+		console.log(getNonActivePlayer().gameboard)
 		const result = getNonActivePlayer().gameboard.receiveAttack(coord);
 		if (!result) return;
 		lastRoundResult =
@@ -61,6 +61,7 @@ const GameController = (
 	};
 
 	return {
+		placeShip,
 		getLastRoundResult,
 		getPlayers,
 		randomizeShips,
@@ -68,18 +69,16 @@ const GameController = (
 		getActivePlayer,
 		getNonActivePlayer,
 		gameOver,
-		resetGame,
 		playRound,
 	};
 };
 
 const ScreenController = () => {
 	const game = GameController();
-
+	
 	const playerTurnSpan = document.querySelector('#turn-display');
 	const gameInfoSpan = document.querySelector('#last-play');
 	const gamesBoardContainer = document.querySelector('.gamesboard-container');
-	const optionContainer = document.querySelector('.option-container')
 
 	const updateScreen = () => {
 		const players = game.getPlayers();
@@ -94,6 +93,14 @@ const ScreenController = () => {
 		);
 	};
 
+	const handleDrop = (cell, block) => {
+		const start = cell.dataset.id 
+		const type = block.dataset.type;
+		return game.placeShip(type, start)
+	}
+
+	const draggables = new Draggables(ships, handleDrop);
+
 	const clickHandlerBoard = (e) => {
 		const cell = e.target.dataset.id;
 		const playerNumberBoard = e.target.parentElement.id;
@@ -102,31 +109,17 @@ const ScreenController = () => {
 		game.playRound(cell);
 		updateScreen();
 	};
-
-	const randomize = () => {
-		game.resetGame();
-		updateScreen();
-	}
-
+	
 	const startGame = () => {
-		game.resetGame();
-		updateScreen();
+		draggables.disableAll();
 		gamesBoardContainer.addEventListener('click', clickHandlerBoard);
 	};
 
-	const resetGame = () => {
-		game.resetGame();
-		updateScreen();
-	};
-
-	const randomizeButton = document.querySelector('#randomize')
 	const startButton = document.querySelector('#start');
-	const resetButton = document.querySelector('#reset');
 
-	randomizeButton.addEventListener('click', randomize)
 	startButton.addEventListener('click', startGame);
-	resetButton.addEventListener('click', resetGame);
 	updateScreen();
+
 };
 
 ScreenController();

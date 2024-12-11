@@ -6,16 +6,10 @@ export const renderBoard = (player, gameboard = '', humanPlayer) => {
 	gameBoardContainer.setAttribute('id', player);
 
 	for (let i = 0; i < width * width; i++) {
-		const cellButton = document.createElement('button');
-		cellButton.classList.add('cell');
-		if (gameboard[i] !== undefined) {
-			if (humanPlayer)
-				cellButton.classList.add(gameboard[i]['name'] ?? gameboard[i]);
-			if (!humanPlayer && !gameboard[i]['name'])
-				cellButton.classList.add(gameboard[i])
-		}
-		cellButton.dataset.id = i;
-		gameBoardContainer.append(cellButton);
+		const cellDiv = document.createElement('div');
+		cellDiv.classList.add('cell');
+		cellDiv.dataset.id = i;
+		gameBoardContainer.append(cellDiv);
 	}
 
 	return gameBoardContainer;

@@ -28,9 +28,22 @@ export class Gameboard {
 		const shipLength = this.ships[type].length;
 		const increment = isVertical ? 10 : 1;
 
+		if (
+			(isVertical && start + (shipLength - 1) * 10 >= this.board.length) ||
+			(!isVertical && (start % 10) + shipLength > 10)
+		) {
+			return null;
+		}
+
+		for (let i = 0; i < shipLength; i++) {
+			if (this.board[start + i * increment]) return null;
+		}
+
 		for (let i = 0; i < shipLength; i++) {
 			this.board[start + i * increment] = this.ships[type];
 		}
+
+		return true;
 	}
 	randomizeShips() {
 		const randomNumber = Math.floor(Math.random() * 5);
@@ -96,5 +109,85 @@ export class Player {
 		this.name = name;
 		this.playerNumber = playerNumber;
 		this.gameboard = new Gameboard();
+	}
+}
+
+export class Draggable {
+	constructor(selector, onDrop) {
+		this.block = document.querySelector(selector);
+		this.onDrop = onDrop;
+
+		const { x: lastX, y: lastY } = this.block.getBoundingClientRect();
+		this.lastX = lastX;
+		this.lastY = lastY;
+		this.isDragging = false;
+
+		this.block.addEventListener('mousedown', this.mouseDown.bind(this));
+	}
+
+	mouseDown(e) {
+		e.preventDefault();
+		this.isDragging = true;
+
+		document.addEventListener('mousemove', this.mouseMove.bind(this));
+		document.addEventListener('mouseup', this.mouseUp.bind(this), {
+			once: true,
+		});
+	}
+
+	mouseMove(e) {
+		if (!this.isDragging) return;
+
+		this.block.style.left = `${e.clientX - this.block.offsetWidth / 2}px`;
+		this.block.style.top = `${e.clientY - this.block.offsetHeight / 2}px`;
+	}
+
+	mouseUp(e) {
+		this.isDragging = false;
+		document.removeEventListener('mousemove', this.mouseMove.bind(this));
+
+		const cell = document
+			.elementsFromPoint(e.clientX, e.clientY)
+			.filter((element) => element.classList.contains('cell'))
+			.at(0);
+
+		if (cell && this.onDrop(cell, this.block)) {
+			const { x: cellX, y: cellY } = cell.getBoundingClientRect();
+			this.block.style.left = `${cellX}px`;
+			this.block.style.top = `${cellY}px`;
+			this.lastX = cellX;
+			this.lastY = cellY;
+		} else {
+			this.block.style.left = `${this.lastX}px`;
+			this.block.style.top = `${this.lastY}px`;
+		}
+		document.removeEventListener('mouseup', this.mouseUp.bind(this));
+	}
+
+	disableDragging() {
+		this.block.removeEventListener('mousedown', this.mouseDown);
+		this.block.style.pointerEvents = 'none'
+	}
+}
+
+export class Draggables {
+	constructor(shipSelectors, onDrop) {
+		this.ships = {};
+		this.onDrop = onDrop;
+		this.initializeShips(shipSelectors);
+	}
+
+	initializeShips(shipSelectors) {
+		shipSelectors.forEach((selector) => {
+			this.ships[selector] = new Draggable(`.${selector}`, this.onDrop);
+		});
+	}
+
+	getShip(name) {
+		return this.ships[name];
+	}
+
+	disableAll() {
+		Object.values(this.ships).forEach(ship => ship.disableDragging());
 	}
 }
