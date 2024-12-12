@@ -2,7 +2,7 @@ import { Player, Draggables } from './classes';
 import { renderBoard } from './helpers';
 import './styles.css';
 
-const ships = ['carrier', 'battleship', 'cruiser', 'submarine', 'destroyer']
+const ships = ['carrier', 'battleship', 'cruiser', 'submarine', 'destroyer'];
 
 const GameController = (
 	playerOneName = 'Player One',
@@ -17,20 +17,19 @@ const GameController = (
 	let lastRoundResult = 'Prepare for BATTLESHIP!';
 
 	const getPlayers = () => players;
-
 	const getLastRoundResult = () => lastRoundResult;
-
-	const randomizeShips = () => {
-		players[0].gameboard.randomizeShips();
-		players[1].gameboard.randomizeShips();
-	};
+	const randomizeShips = () => players[1].gameboard.randomizeShips();
+	randomizeShips();
 
 	const placeShip = (type, start) => {
-		start = Number(start)
-		return players[0].gameboard.placeShip(type, start)
-		
-	}
-
+		start = Number(start);
+		return players[0].gameboard.placeShip(type, start);
+	};
+	const allShipsSet = () => {
+		return (
+			players[0].gameboard.allShipsSet() && players[1].gameboard.allShipsSet()
+		);
+	};
 	const switchPlayerTurn = () => {
 		activePlayer = activePlayer === players[0] ? players[1] : players[0];
 	};
@@ -46,7 +45,6 @@ const GameController = (
 	};
 
 	const playRound = (coord) => {
-		console.log(getNonActivePlayer().gameboard)
 		const result = getNonActivePlayer().gameboard.receiveAttack(coord);
 		if (!result) return;
 		lastRoundResult =
@@ -61,6 +59,7 @@ const GameController = (
 	};
 
 	return {
+		allShipsSet,
 		placeShip,
 		getLastRoundResult,
 		getPlayers,
@@ -75,7 +74,7 @@ const GameController = (
 
 const ScreenController = () => {
 	const game = GameController();
-	
+
 	const playerTurnSpan = document.querySelector('#turn-display');
 	const gameInfoSpan = document.querySelector('#last-play');
 	const gamesBoardContainer = document.querySelector('.gamesboard-container');
@@ -94,10 +93,10 @@ const ScreenController = () => {
 	};
 
 	const handleDrop = (cell, block) => {
-		const start = cell.dataset.id 
+		const start = cell.dataset.id;
 		const type = block.dataset.type;
-		return game.placeShip(type, start)
-	}
+		return game.placeShip(type, start);
+	};
 
 	const draggables = new Draggables(ships, handleDrop);
 
@@ -109,8 +108,11 @@ const ScreenController = () => {
 		game.playRound(cell);
 		updateScreen();
 	};
-	
+
 	const startGame = () => {
+		if (!game.allShipsSet()) {
+			playerTurnSpan.innerText = 'You are not prepared for battle!'
+		}
 		draggables.disableAll();
 		gamesBoardContainer.addEventListener('click', clickHandlerBoard);
 	};
@@ -119,7 +121,6 @@ const ScreenController = () => {
 
 	startButton.addEventListener('click', startGame);
 	updateScreen();
-
 };
 
 ScreenController();

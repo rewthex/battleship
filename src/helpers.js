@@ -1,4 +1,4 @@
-export const renderBoard = (player, gameboard = '', humanPlayer) => {
+export const renderBoard = (player) => {
 	const width = 10;
 
 	const gameBoardContainer = document.createElement('div');

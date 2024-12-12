@@ -14,7 +14,7 @@ export class Ship {
 
 export class Gameboard {
 	constructor() {
-		this.board = Array(100);
+		this.board = Array(100).fill(undefined);
 		this.ships = {
 			carrier: new Ship('carrier', 5),
 			battleship: new Ship('battleship', 4),
@@ -39,11 +39,22 @@ export class Gameboard {
 			if (this.board[start + i * increment]) return null;
 		}
 
+		this.removeShip(type);
+
 		for (let i = 0; i < shipLength; i++) {
 			this.board[start + i * increment] = this.ships[type];
 		}
 
 		return true;
+	}
+	removeShip(type) {
+		this.board = this.board.map((cell) => {
+			if (cell?.name === type) {
+				return undefined;
+			} else {
+				return cell;
+			}
+		});
 	}
 	randomizeShips() {
 		const randomNumber = Math.floor(Math.random() * 5);
@@ -98,6 +109,9 @@ export class Gameboard {
 			this.board[coord] = 'miss';
 			return 'miss';
 		}
+	}
+	allShipsSet() {
+		return this.board.filter((cell) => cell !== undefined).length === 17;
 	}
 	allShipsSunk() {
 		return Object.values(this.ships).every((ship) => ship.isSunk());
@@ -166,7 +180,7 @@ export class Draggable {
 
 	disableDragging() {
 		this.block.removeEventListener('mousedown', this.mouseDown);
-		this.block.style.pointerEvents = 'none'
+		this.block.style.pointerEvents = 'none';
 	}
 }
 
@@ -188,6 +202,6 @@ export class Draggables {
 	}
 
 	disableAll() {
-		Object.values(this.ships).forEach(ship => ship.disableDragging());
+		Object.values(this.ships).forEach((ship) => ship.disableDragging());
 	}
 }
