@@ -22,7 +22,7 @@ export class Gameboard {
 			submarine: new Ship('submarine', 3),
 			destroyer: new Ship('destroyer', 2),
 		};
-		this.attacks = [];
+		this.attacks = new Set();
 	}
 	placeShip(type, start, isVertical) {
 		const shipLength = this.ships[type].length;
@@ -98,8 +98,8 @@ export class Gameboard {
 		}
 	}
 	receiveAttack(coord) {
-		if (this.attacks.includes(coord)) return;
-		this.attacks.push(coord);
+		if (this.attacks.has(coord)) return;
+		this.attacks.add(coord);
 		const result = this.board[coord];
 		if (result !== undefined) {
 			result.hit();

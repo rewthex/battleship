@@ -1,4 +1,4 @@
-export const renderBoard = (player) => {
+export const renderBoard = (player, gameboard, gameover) => {
 	const width = 10;
 
 	const gameBoardContainer = document.createElement('div');
@@ -8,6 +8,9 @@ export const renderBoard = (player) => {
 	for (let i = 0; i < width * width; i++) {
 		const cellDiv = document.createElement('div');
 		cellDiv.classList.add('cell');
+		if (typeof gameboard[i] === 'string') {
+			cellDiv.classList.add(gameboard[i]);
+		}
 		cellDiv.dataset.id = i;
 		gameBoardContainer.append(cellDiv);
 	}

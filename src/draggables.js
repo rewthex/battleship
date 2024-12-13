@@ -33,7 +33,7 @@ export class Draggable {
 		this.isDragging = false;
 		document.removeEventListener('mousemove', this.mouseMove.bind(this));
 
-		// Get the block's dimensions and position
+		
 		let { x, y } = this.block.getBoundingClientRect();		
 
 		const cell = document

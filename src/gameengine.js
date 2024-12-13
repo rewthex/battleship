@@ -1,70 +1,82 @@
-import { Player } from "./gameclasses";
+import { Player } from './gameclasses';
 
 export class GameEngine {
-  constructor(playerOneName = 'Player One', playerTwoName = 'Player Two') {
-    this.players = [
-      new Player(playerOneName, 'player-one'),
-      new Player(playerTwoName, 'player-two')
-    ];
-    this.activePlayer = this.players[0];
-    this.lastRoundMessage = 'Prepare for BATTLESHIP!';
+	constructor(playerOneName = 'Player One', playerTwoName = 'Player Two') {
+		this.players = [
+			new Player(playerOneName, 'player-one'),
+			new Player(playerTwoName, 'player-two'),
+		];
+		this.activePlayer = this.players[0];
+		this.lastRoundMessage = 'Prepare for BATTLESHIP!';
 
-    this.players[1].gameboard.randomizeShips();
-  }
+		this.players[1].gameboard.randomizeShips();
+	}
 
-  getPlayers() {
-    return this.players;
-  }
+	getPlayers() {
+		return this.players;
+	}
 
-  getLastRoundMessage() {
-    return this.lastRoundMessage;
-  }
+	getFirstGameboard() {
+		return this.players[0].gameboard.board;
+	}
 
-  randomizeShipsForPlayerTwo() {
-    this.players[1].gameboard.randomizeShips();
-  }
+	getSecondGameboard() {
+		return this.players[1].gameboard.board;
+	}
 
-  placeShip(type, startPosition, vertical) {
-    return this.players[0].gameboard.placeShip(type, Number(startPosition), vertical);
-  }
+	getFirstPlayersAttacks() {
+		return this.players[0].gameboard.attacks;
+	}
 
-  areAllShipsSet() {
-    return this.players.every(player => player.gameboard.allShipsSet());
-  }
+	getLastRoundMessage() {
+		return this.lastRoundMessage;
+	}
 
-  switchTurn() {
-    this.activePlayer = this.activePlayer === this.players[0] ? this.players[1] : this.players[0];
-  }
+	randomizeShipsForPlayerTwo() {
+		this.players[1].gameboard.randomizeShips();
+	}
 
-  getActivePlayer() {
-    return this.activePlayer;
-  }
+	placeShip(type, startPosition, vertical) {
+		return this.players[0].gameboard.placeShip(
+			type,
+			Number(startPosition),
+			vertical
+		);
+	}
 
-  getInactivePlayer() {
-    return this.activePlayer === this.players[0] ? this.players[1] : this.players[0];
-  }
+	areAllShipsSet() {
+		return this.players.every((player) => player.gameboard.allShipsSet());
+	}
 
-  isGameOver() {
-    return this.players.some(player => player.gameboard.allShipsSunk());
-  }
+	switchTurn() {
+		this.activePlayer =
+			this.activePlayer === this.players[0] ? this.players[1] : this.players[0];
+	}
 
-  playRound(coordinate) {
-    const result = this.getInactivePlayer().gameboard.receiveAttack(coordinate);
+	getActivePlayer() {
+		return this.activePlayer;
+	}
 
-    if (!result) return;
+	getInactivePlayer() {
+		return this.activePlayer === this.players[0]
+			? this.players[1]
+			: this.players[0];
+	}
 
-    const activePlayerName = this.getActivePlayer().name;
-    if (result === 'hit') {
-      this.lastRoundMessage = `${activePlayerName} struck a ship at ${coordinate}`;
-    } else {
-      this.lastRoundMessage = `${activePlayerName} missed at ${coordinate}`;
-    }
+	isGameOver() {
+		return this.players.some((player) => player.gameboard.allShipsSunk());
+	}
 
-    if (this.isGameOver()) {
-      this.lastRoundMessage = `${activePlayerName} has won the game!`;
-      return;
-    }
+	generateRandomCoordinate() {
+		let randomCoordinate = Math.floor(Math.random() * 100);
+		while (this.getFirstPlayersAttacks().has(randomCoordinate)) {
+			randomCoordinate = Math.floor(Math.random() * 100);
+		}
 
-    this.switchTurn();
-  }
+		return randomCoordinate;
+	}
+
+	playRound(coordinate) {
+		
+	}
 }

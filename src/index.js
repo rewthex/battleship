@@ -3,52 +3,69 @@ import { Draggables } from './draggables';
 import { renderBoard } from './helpers';
 import './styles.css';
 
-const ships = ['carrier', 'battleship', 'cruiser', 'submarine', 'destroyer'];
-
-const ScreenController = () => {
+const ScreenController = (() => {
 	const game = new GameEngine();
+	const ships = ['carrier', 'battleship', 'cruiser', 'submarine', 'destroyer'];
 	const draggables = new Draggables(ships, handleDrop);
 
+	// DOM references
 	const playerTurnSpan = document.querySelector('#turn-display');
 	const gameInfoSpan = document.querySelector('#last-play');
 	const gamesBoardContainer = document.querySelector('.gamesboard-container');
+	const startButton = document.querySelector('#start');
+	const rotateButton = document.querySelector('#rotate');
+	const restartButton = document.querySelector('#restart');
 
-	const updateScreen = () => {
-		const players = game.getPlayers();
+	// Updates the game screen
+	const updateScreen = (initialRender = false) => {
 		gamesBoardContainer.innerHTML = '';
-		playerTurnSpan.innerText = `${game.getActivePlayer().name}'s turn to go!`;
+		if (initialRender) {
+			playerTurnSpan.innerText = `Place your ships and...`;
+		} else {
+			playerTurnSpan.innerText = `${game.getActivePlayer().name}'s turn to go!`;
+		}
 		gameInfoSpan.innerText = game.getLastRoundMessage();
-		gamesBoardContainer.append(
-			renderBoard('player-one', players[0].gameboard.board, true)
-		);
-		gamesBoardContainer.append(
-			renderBoard('player-two', players[1].gameboard.board, false)
-		);
+
+		game.getPlayers().forEach((player) => {
+			gamesBoardContainer.append(
+				renderBoard(player.playerNumber, player.gameboard.board, false)
+			);
+		});
+
+		const playerTwoGameboard = document.getElementById('player-two');
+		playerTwoGameboard.addEventListener('click', clickHandlerBoard);
 	};
 
+	// Handles ship placement when dropped
 	function handleDrop(cell, block) {
+		if (cell.parentElement.id !== 'player-one') return;
+
 		const start = cell.dataset.id;
 		const type = block.dataset.type;
-		const vertical = block.dataset.vertical === 'false' ? false : true;
-		console.log(start, type, vertical);
+		const vertical = block.dataset.vertical === 'true';
+
 		return game.placeShip(type, start, vertical);
 	}
 
-	const clickHandlerBoard = (e) => {
+	// Handles board click interactions
+	function clickHandlerBoard(e) {
+		if (!game.areAllShipsSet()) return;
+
 		const cell = e.target.dataset.id;
-		const playerNumberBoard = e.target.parentElement.id;
-		const activePlayerNumber = game.getActivePlayer().playerNumber;
-		if (!cell || playerNumberBoard === activePlayerNumber) return;
+		if (!cell) return;
+
 		game.playRound(cell);
 		updateScreen();
-	};
+	}
 
+	// Rotates ships
 	const rotateShips = () => {
 		const optionsContainer = document.querySelector('.options-container');
-		const ships = optionsContainer.querySelectorAll('div');
+		const ships = optionsContainer.querySelectorAll(
+			'div:not([data-set="true"])'
+		);
 
 		ships.forEach((ship) => {
-			if (ship.dataset.set === 'true') return;
 			const newHeight = ship.offsetHeight;
 			ship.style.height = `${ship.offsetWidth}px`;
 			ship.style.width = `${newHeight}px`;
@@ -56,26 +73,27 @@ const ScreenController = () => {
 				ship.dataset.vertical === 'true' ? 'false' : 'true';
 		});
 
-		optionsContainer.classList.toggle('options-container-vertical')
+		optionsContainer.classList.toggle('options-container-vertical');
 	};
 
+	// Starts the game
 	const startGame = () => {
 		if (!game.areAllShipsSet()) {
 			playerTurnSpan.innerText = 'You are not prepared for battle!';
 			return;
 		}
-		const optionsContainer = document.querySelector('.options-container');
-		optionsContainer.remove();
+		updateScreen();
 		draggables.disableAll();
-		gamesBoardContainer.addEventListener('click', clickHandlerBoard);
 	};
 
-	const startButton = document.querySelector('#start');
-	const rotateButton = document.querySelector('#rotate');
+	// Restarts the game
+	const restartGame = () => window.location.reload();
 
+	// Event listeners
 	startButton.addEventListener('click', startGame);
 	rotateButton.addEventListener('click', rotateShips);
-	updateScreen();
-};
+	restartButton.addEventListener('click', restartGame);
 
-ScreenController();
+	// Initialize the screen
+	updateScreen(true);
+})();
