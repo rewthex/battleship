@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Battleship</title>
+	<script defer src="main.js"></script></head>
+	<body>
+		<div class="container">
+			<div class="header">
+				<h1 class="logo">BATTLESHIP</h1>
+			</div>
+			<div class="game-area">
+				<div class="game-info">
+					<p id="turn-display"></p>
+					<p id="last-play"></p>
+				</div>
+				<div class="options-container">
+					<div
+						class="carrier"
+						data-type="carrier"
+						data-vertical="false"
+						data-set="false"
+					></div>
+					<div
+						class="battleship"
+						data-type="battleship"
+						data-vertical="false"
+						data-set="false"
+					></div>
+					<div
+						class="cruiser"
+						data-type="cruiser"
+						data-vertical="false"
+						data-set="false"
+					></div>
+					<div
+						class="submarine"
+						data-type="submarine"
+						data-vertical="false"
+						data-set="false"
+					></div>
+					<div
+						class="destroyer"
+						data-type="destroyer"
+						data-vertical="false"
+						data-set="false"
+					></div>
+				</div>
+				<div class="gamesboard-container"></div>
+				<div class="controls">
+					<button type="button" id="rotate">Rotate</button>
+					<button type="button" id="start">Start</button>
+					<button type="button" id="restart">Restart</button>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
