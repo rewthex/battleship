@@ -41,8 +41,6 @@ export class Draggable {
 			.filter((element) => element.classList.contains('cell'))
 			.at(0);
 
-		console.log(cell);
-
 		if (cell && this.onDrop(cell, this.block)) {
 			const { x: cellX, y: cellY } = cell.getBoundingClientRect();
 			this.block.style.left = `${cellX}px`;

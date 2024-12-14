@@ -8,7 +8,6 @@ const ScreenController = (() => {
 	const ships = ['carrier', 'battleship', 'cruiser', 'submarine', 'destroyer'];
 	const draggables = new Draggables(ships, handleDrop);
 
-	// DOM references
 	const playerTurnSpan = document.querySelector('#turn-display');
 	const gameInfoSpan = document.querySelector('#last-play');
 	const gamesBoardContainer = document.querySelector('.gamesboard-container');
@@ -16,7 +15,6 @@ const ScreenController = (() => {
 	const rotateButton = document.querySelector('#rotate');
 	const restartButton = document.querySelector('#restart');
 
-	// Updates the game screen
 	const updateScreen = (initialRender = false) => {
 		gamesBoardContainer.innerHTML = '';
 		if (initialRender) {
@@ -33,7 +31,6 @@ const ScreenController = (() => {
 		});
 	};
 
-	// Handles ship placement when dropped
 	function handleDrop(cell, block) {
 		if (cell.parentElement.id !== 'player-one') return;
 
@@ -44,17 +41,14 @@ const ScreenController = (() => {
 		return game.placeShip(type, start, vertical);
 	}
 
-	// Handles board click interactions
 	function clickHandlerBoard(e) {
 		const cell = e.target;
-		console.log(cell.dataset.id, cell.parentElement.id)
 		if (!cell.dataset.id || cell.parentElement.id !== 'player-two') return;
 
 		game.playRound(cell.dataset.id);
 		updateScreen();
 	}
 
-	// Rotates ships
 	const rotateShips = () => {
 		const optionsContainer = document.querySelector('.options-container');
 		const ships = optionsContainer.querySelectorAll(
@@ -72,25 +66,21 @@ const ScreenController = (() => {
 		optionsContainer.classList.toggle('options-container-vertical');
 	};
 
-	// Starts the game
 	const startGame = () => {
 		if (!game.areAllShipsSet()) {
 			playerTurnSpan.innerText = 'You are not prepared for battle!';
 			return;
 		}
+		gamesBoardContainer.addEventListener('click', clickHandlerBoard);
 		updateScreen();
 		draggables.disableAll();
 	};
 
-	// Restarts the game
 	const restartGame = () => window.location.reload();
 
-	// Event listeners
 	startButton.addEventListener('click', startGame);
 	rotateButton.addEventListener('click', rotateShips);
 	restartButton.addEventListener('click', restartGame);
-	gamesBoardContainer.addEventListener('click', clickHandlerBoard);
 
-	// Initialize the screen
 	updateScreen(true);
 })();
