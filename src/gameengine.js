@@ -9,7 +9,7 @@ export class GameEngine {
 		this.activePlayer = this.players[0];
 		this.lastRoundMessage = 'Prepare for BATTLESHIP!';
 
-		this.players[1].gameboard.randomizeShips();
+		this.randomizeShipsForPlayerTwo();
 	}
 
 	getPlayers() {
@@ -67,16 +67,19 @@ export class GameEngine {
 		return this.players.some((player) => player.gameboard.allShipsSunk());
 	}
 
-	generateRandomCoordinate() {
+	playComputerRound() {
 		let randomCoordinate = Math.floor(Math.random() * 100);
 		while (this.getFirstPlayersAttacks().has(randomCoordinate)) {
 			randomCoordinate = Math.floor(Math.random() * 100);
 		}
-
-		return randomCoordinate;
+		this.players[0].gameboard.receiveAttack(randomCoordinate);
+		this.switchTurn();
 	}
 
 	playRound(coordinate) {
-		
+		const result = this.players[1].gameboard.receiveAttack(coordinate);
+		if (!result) return;
+    this.switchTurn();
+		this.playComputerRound();
 	}
 }

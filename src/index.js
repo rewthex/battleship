@@ -31,9 +31,6 @@ const ScreenController = (() => {
 				renderBoard(player.playerNumber, player.gameboard.board, false)
 			);
 		});
-
-		const playerTwoGameboard = document.getElementById('player-two');
-		playerTwoGameboard.addEventListener('click', clickHandlerBoard);
 	};
 
 	// Handles ship placement when dropped
@@ -49,12 +46,11 @@ const ScreenController = (() => {
 
 	// Handles board click interactions
 	function clickHandlerBoard(e) {
-		if (!game.areAllShipsSet()) return;
+		const cell = e.target;
+		console.log(cell.dataset.id, cell.parentElement.id)
+		if (!cell.dataset.id || cell.parentElement.id !== 'player-two') return;
 
-		const cell = e.target.dataset.id;
-		if (!cell) return;
-
-		game.playRound(cell);
+		game.playRound(cell.dataset.id);
 		updateScreen();
 	}
 
@@ -93,6 +89,7 @@ const ScreenController = (() => {
 	startButton.addEventListener('click', startGame);
 	rotateButton.addEventListener('click', rotateShips);
 	restartButton.addEventListener('click', restartGame);
+	gamesBoardContainer.addEventListener('click', clickHandlerBoard);
 
 	// Initialize the screen
 	updateScreen(true);

@@ -17,27 +17,27 @@
 
 .game-area {
 	display: grid;
-	grid-template-rows: 1fr 3fr 1fr 1fr;
+	grid-template-rows: 1fr 3fr 2fr 1fr;
 	grid-template-columns: 1fr 3fr;
 	grid-template-areas:
-		'game-info         game-info'
-		'options-container gamesboard-container'
-		'controls          controls';
+		'game-info            game-info'
+		'gamesboard-container gamesboard-container'
+		'options-container    options-container'
+		'controls             controls';
 	grid-area: game-area;
 	gap: 40px;
 }
 
 .options-container {
+	background-color: bisque;
 	grid-area: options-container;
-	height: 300px;
-	min-width: 200px;
+	min-height: 150px;
+	min-width: 600px;
 	display: grid;
+	grid-template-columns: 2fr 1.5fr 1fr 1fr 1fr;
+	justify-self: center;
 }
 
-.options-container-vertical {
-	grid-template-columns: 1fr 1fr 1fr;
-	grid-template-rows: 1fr 1fr;
-}
 
 
 .game-info {
@@ -85,32 +85,29 @@ button {
 	height: 30px;
 }
 
-.options-container > div {
-	opacity: 0.8;
-}
 
 .destroyer {
-	background-color: brown;
+	background-color: purple;
 	width: 60px;
-	height: 30px;
+	height: 29px;
 }
 
 .submarine {
 	background-color: green;
 	width: 90px;
-	height: 30px;
+	height: 29px;
 }
 
 .cruiser {
-	background-color: purple;
+	background-color: rgb(179, 16, 16);
 	width: 90px;
-	height: 30px;
+	height: 29px;
 }
 
 .battleship {
 	background-color: orange;
 	width: 120px;
-	height: 30px;
+	height: 29px;
 }
 
 .carrier {
@@ -120,9 +117,12 @@ button {
 }
 
 .hit {
-	background-color: rgba(0, 128, 0, 0.432);
+	z-index: 1;
+	background-color: rgb(0, 0, 0);
 }
 
 .miss {
-	background-color: rgba(128, 0, 0, 0.432);
+	z-index: 1;
+	background-color: rgb(60, 139, 150);
+
 }
