@@ -6,6 +6,7 @@ export class Draggable {
 		const { x: lastX, y: lastY } = this.block.getBoundingClientRect();
 		this.lastX = lastX;
 		this.lastY = lastY;
+		this.offset = { x: 0, y: 0 };
 		this.isDragging = false;
 
 		this.block.addEventListener('mousedown', this.mouseDown.bind(this));
@@ -14,6 +15,10 @@ export class Draggable {
 	mouseDown(e) {
 		e.preventDefault();
 		this.isDragging = true;
+
+		const block = this.block.getBoundingClientRect();
+		this.offset.x = e.clientX - block.left;
+		this.offset.y = e.clientY - block.top;
 
 		document.addEventListener('mousemove', this.mouseMove.bind(this));
 		document.addEventListener('mouseup', this.mouseUp.bind(this), {
@@ -25,8 +30,8 @@ export class Draggable {
 		if (!this.isDragging) return;
 		this.block.style.position = 'absolute';
 
-		this.block.style.left = `${e.clientX - this.block.offsetWidth / 2}px`;
-		this.block.style.top = `${e.clientY - this.block.offsetHeight / 2}px`;
+		this.block.style.left = `${e.clientX - this.offset.x}px`;
+		this.block.style.top = `${e.clientY - this.offset.y}px`;
 	}
 
 	mouseUp(e) {
