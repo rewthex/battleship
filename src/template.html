@@ -6,54 +6,136 @@
 		<title>Battleship</title>
 	</head>
 	<body>
-		<div class="container">
-			<div class="header">
-				<h1 class="logo">BATTLESHIP</h1>
-			</div>
-			<div class="game-area">
-				<div class="game-info">
-					<p id="turn-display"></p>
-					<p id="last-play"></p>
-				</div>
-				<div class="options-container">
-					<div
-						class="carrier"
-						data-type="carrier"
-						data-vertical="false"
-						data-set="false"
-					></div>
-					<div
-						class="battleship"
-						data-type="battleship"
-						data-vertical="false"
-						data-set="false"
-					></div>
-					<div
-						class="cruiser"
-						data-type="cruiser"
-						data-vertical="false"
-						data-set="false"
-					></div>
-					<div
-						class="submarine"
-						data-type="submarine"
-						data-vertical="false"
-						data-set="false"
-					></div>
-					<div
-						class="destroyer"
-						data-type="destroyer"
-						data-vertical="false"
-						data-set="false"
-					></div>
-				</div>
-				<div class="gamesboard-container"></div>
-				<div class="controls">
-					<button type="button" id="rotate">Rotate</button>
-					<button type="button" id="start">Start</button>
-					<button type="button" id="restart">Restart</button>
-				</div>
-			</div>
-		</div>
+		<body>
+			<!-- <dialog id="dialog">
+				Here's my dialog bish
+			</dialog> -->
+			<main class="container">
+				<section class="game-area">
+					<output
+						id="game-status"
+						role="status"
+						aria-live="assertive"
+						aria-atomic="true"
+					>
+						Place your ships!
+					</output>
+	
+					<section class="game-boards">
+						<div class="game-board-container" aria-label="Player's game board">
+							<div class="top-labels">
+								<div class="label"></div>
+								<div class="label">1</div>
+								<div class="label">2</div>
+								<div class="label">3</div>
+								<div class="label">4</div>
+								<div class="label">5</div>
+								<div class="label">6</div>
+								<div class="label">7</div>
+								<div class="label">8</div>
+								<div class="label">9</div>
+								<div class="label">10</div>
+							</div>
+							<div class="side-labels">
+								<div class="label">A</div>
+								<div class="label">B</div>
+								<div class="label">C</div>
+								<div class="label">D</div>
+								<div class="label">E</div>
+								<div class="label">F</div>
+								<div class="label">G</div>
+								<div class="label">H</div>
+								<div class="label">I</div>
+								<div class="label">J</div>
+							</div>
+							<div class="game-board" id="player-board"></div>
+						</div>
+						<div class="game-board-container" aria-label="Computer's game board">
+							<div class="top-labels">
+								<div class="label"></div>
+								<div class="label">1</div>
+								<div class="label">2</div>
+								<div class="label">3</div>
+								<div class="label">4</div>
+								<div class="label">5</div>
+								<div class="label">6</div>
+								<div class="label">7</div>
+								<div class="label">8</div>
+								<div class="label">9</div>
+								<div class="label">10</div>
+							</div>
+							<div class="side-labels">
+								<div class="label">A</div>
+								<div class="label">B</div>
+								<div class="label">C</div>
+								<div class="label">D</div>
+								<div class="label">E</div>
+								<div class="label">F</div>
+								<div class="label">G</div>
+								<div class="label">H</div>
+								<div class="label">I</div>
+								<div class="label">J</div>
+							</div>
+							<div class="game-board" id="computer-board"></div>
+						</div>
+						<section class="game-controls">
+							<button type="button" class="game-button" id="start-game">
+								START
+							</button>
+							<button type="button" class="game-button" id="reset-game">
+								RESET
+							</button>
+						</section>
+					</section>
+				</section>
+	
+				<section class="ship-placement">
+					<ul class="ship-list">
+						<li
+							class="ship"
+							id="carrier"
+							data-type="carrier"
+							data-vertical="false"
+							data-set="false"
+							aria-label="Carrier ship. Drag to place."
+						></li>
+						<li
+							class="ship"
+							id="battleship"
+							data-type="battleship"
+							data-vertical="false"
+							data-set="false"
+							aria-label="Battleship. Drag to place."
+						></li>
+						<li
+							class="ship"
+							id="cruiser"
+							data-type="cruiser"
+							data-vertical="false"
+							data-set="false"
+							aria-label="Cruiser. Drag to place."
+						></li>
+						<li
+							class="ship"
+							id="submarine"
+							data-type="submarine"
+							data-vertical="false"
+							data-set="false"
+							aria-label="Submarine. Drag to place."
+						></li>
+						<li
+							class="ship"
+							id="destroyer"
+							data-type="destroyer"
+							data-vertical="false"
+							data-set="false"
+							aria-label="Destroyer. Drag to place."
+						></li>
+					</ul>
+					<button type="button" class="game-button" id="rotate-ships">
+						ROTATE
+					</button>
+				</section>
+			</main>
 	</body>
 </html>

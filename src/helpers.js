@@ -1,19 +1,16 @@
-export const renderBoard = (player, gameboard, gameover) => {
-	const width = 10;
+export const createBoards = () => {
+	const playerBoard = document.getElementById('player-board')
+	const computerBoard = document.getElementById('computer-board')
+	
+	for (let i = 0; i < 100; i++) {
+		const playerCell = document.createElement('div');
+		playerCell.classList.add('cell');
+		playerCell.setAttribute('id', i);
+		playerBoard.appendChild(playerCell);
 
-	const gameBoardContainer = document.createElement('div');
-	gameBoardContainer.classList.add('game-board');
-	gameBoardContainer.setAttribute('id', player);
-
-	for (let i = 0; i < width * width; i++) {
-		const cellDiv = document.createElement('div');
-		cellDiv.classList.add('cell');
-		if (typeof gameboard[i] === 'string') {
-			cellDiv.classList.add(gameboard[i]);
-		}
-		cellDiv.dataset.id = i;
-		gameBoardContainer.append(cellDiv);
+		const computerCell = document.createElement('div');
+		computerCell.classList.add('cell');
+		computerCell.setAttribute('id', i);
+		computerBoard.appendChild(computerCell);
 	}
-
-	return gameBoardContainer;
 };

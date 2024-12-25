@@ -1,138 +1,266 @@
-@font-face {
-	font-family: 'Boldean';
-	src: url('./BOLDEAN.ttf') format('truetype');
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
 }
 
 * {
+	font-family: 'system-ui';
+	font-size: 10px;
+	letter-spacing: 0.2rem;
 	margin: 0;
-	box-sizing: border-box;
-	background-color: rgb(210, 230, 230);
+}
+
+body {
+  background-color: rgb(224, 250, 255);
+	line-height: 1.5;
+	-webkit-font-smoothing: antialiased;
+}
+
+input,
+button,
+output {
+	font: inherit;
+}
+
+:root {
+	--shadow-color: 0deg 0% 53%;
+	--shadow-elevation-medium: 0.3px 0.5px 0.8px hsl(var(--shadow-color) / 0.26),
+		1.1px 2.2px 3.2px -0.5px hsl(var(--shadow-color) / 0.36),
+		2.5px 5px 7.2px -0.9px hsl(var(--shadow-color) / 0.46),
+		5.6px 11.3px 16.3px -1.4px hsl(var(--shadow-color) / 0.56);
+}
+
+dialog[open] {
+  justify-self: center;
+  align-self: center;
+}
+
+dialog[open]::backdrop {
+  -webkit-backdrop-filter: blur(5px);
+  backdrop-filter: blur(5px);
 }
 
 .container {
 	display: grid;
-	grid-template-rows: 100px 600px;
+	grid-template-rows: 0.3fr 5fr 0.4fr 2.7fr;
 	grid-template-areas:
-		'header'
-		'game-area';
-}
-
-.header {
-	font-family: 'Boldean';
-	letter-spacing: 0.5rem;
-	text-align: center;
-	align-self: center;
-	grid-area: header;
+    '.'
+		'game-area'
+		'.'
+		'ship-placement';
 }
 
 .game-area {
-	display: grid;
-	grid-template-rows: 1fr 3fr 2fr 1fr;
-	grid-template-columns: 1fr 3fr;
-	grid-template-areas:
-		'game-info            game-info'
-		'gamesboard-container gamesboard-container'
-		'options-container    options-container'
-		'controls             controls';
 	grid-area: game-area;
-	gap: 40px;
-}
-
-.options-container {
-	grid-area: options-container;
-	min-height: 150px;
-	min-width: 600px;
 	display: grid;
-	grid-template-columns: 2fr 1.5fr 1fr 1fr 1fr;
-	justify-self: center;
+	grid-template-columns: 1fr;
+	grid-template-rows: 1fr 0.5fr 8fr;
+	grid-template-areas:
+		'game-status'
+    '.'
+		'game-boards';
 }
 
-
-
-.game-info {
-	grid-area: game-info;
-	display: flex;
-	flex-direction: column;
-	gap: 10px;
-	align-items: center;
+#game-status {
+	justify-self: center;
+	align-self: center;
+	text-align: center;
+	width: 60%;
+	padding: 5px;
+	grid-area: game-status;
+	font-size: 2rem;
+	background: rgba(83, 190, 255, 0.2);
+	border-radius: 16px;
+	background: linear-gradient(to bottom, #eaf1f4, #c5d8df);
+	border: 1px solid #a7bac7;
+	border-radius: 4px;
 }
 
-.gamesboard-container {
-	grid-area: gamesboard-container;
-	width: 650px;
-	height: 300px;
-	display: flex;
-	justify-content: space-between;
+.game-boards {
+  background-color: whitesmoke;
+	width: 75%;
+	padding: 25px;
+	grid-area: game-boards;
+	display: grid;
 	justify-self: center;
+	justify-content: center;
+	gap: 25px;
+	box-shadow: var(--shadow-elevation-medium);
+	border-radius: 15px;
+}
+
+.game-board-container {
+	width: 330px;
+	height: 330px;
+	display: grid;
+	align-self: center;
+	grid-template-columns: 1fr 10fr;
+	grid-template-rows: 1fr 10fr;
+	grid-template-areas:
+		'top-labels  top-labels'
+		'side-labels game-board';
 }
 
 .game-board {
-	width: 303px;
-	height: 303px;
-	display: grid;
-	grid-template-columns: repeat(10, 1fr);
-	grid-template-rows: repeat(10, 1fr);
-	gap: 1px;
-	background-color: black;
-	border: 1px solid black;
+	display: flex;
+	flex-wrap: wrap;
 }
 
 .cell {
-	width: 100%;
-	height: 100%;
-	background-color: white;
+	width: 30px;
+	height: 30px;
+  border: 1px solid black;
 }
 
-.controls {
-	grid-area: controls;
+.label {
+	width: 30px;
+	height: 30px;
+	text-align: center;
+	align-content: center;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.top-labels {
+	grid-area: top-labels;
 	display: flex;
-	justify-content: center;
-	gap: 40px;
+	flex-direction: row;
 }
 
-button {
-	background-color: white;
+.top-labels .label:first-child {
+  border: none;
+}
+
+.top-labels .label:nth-child(2) {
+  border-right: 1px solid black;
+}
+
+.top-labels .label:nth-child(11) {
+  border-left: 1px solid black;
+  border-right: none;
+}
+
+.top-labels .label:nth-child(n+3):nth-child(-n+10) {
+  border-left: 1px solid black;
+  border-right: 1px solid black;
+}
+
+.side-labels {
+	grid-area: side-labels;
+	display: flex;
+	flex-direction: column;
+}
+
+.side-labels .label:first-child {
+  border-bottom: 1px solid black;
+}
+
+.side-labels .label:last-child {
+  border-top: 1px solid black;
+}
+
+.side-labels .label:nth-child(n+2):nth-child(-n+9) {
+  border-top: 1px solid black;
+  border-bottom: 1px solid black;
+}
+
+.game-controls {
+	display: flex;
+	gap: 20px;
+	grid-column-start: 1;
+	grid-column-end: 3;
+	justify-content: space-evenly;
+}
+
+.game-controls > button {
+	width: 35%;
+	padding: 10px;
+	font-size: 1.5rem;
+	font-weight: 600;
+	border: none;
+	background-color: #c5d8df;
+}
+
+.ship-placement {
+  background-color: whitesmoke;
+	display: grid;
+	grid-template-rows: 4fr 1fr;
+	grid-template-areas:
+		'ship-list'
+		'rotate-ships';
+	justify-self: center;
+	width: 80%;
+	padding: 25px;
+	grid-area: ship-placement;
+	box-shadow: var(--shadow-elevation-medium);
+	border-radius: 15px;
+}
+
+.ship-list {
+	grid-area: ship-list;
+	list-style: none;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-evenly;
+}
+
+.ship {
+	border: 1px solid black;
+}
+
+#destroyer {
+	background-color: black;
+	height: 30px;
+	width: 60px;
+}
+
+#submarine {
+	background-color: black;
+
+	height: 30px;
+	width: 90px;
+}
+
+#cruiser {
+	background-color: black;
+
+	width: 90px;
 	height: 30px;
 }
 
+#battleship {
+	background-color: black;
 
-.destroyer {
-	background-color: purple;
-	width: 60px;
-	height: 29px;
-}
-
-.submarine {
-	background-color: green;
-	width: 90px;
-	height: 29px;
-}
-
-.cruiser {
-	background-color: rgb(179, 16, 16);
-	width: 90px;
-	height: 29px;
-}
-
-.battleship {
-	background-color: orange;
 	width: 120px;
-	height: 29px;
+	height: 30px;
 }
 
-.carrier {
-	background-color: blue;
+#carrier {
+	background-color: black;
+
 	width: 150px;
 	height: 30px;
 }
 
-.hit {
-	z-index: 1;
-	background-color: rgb(0, 0, 0);
+#rotate-ships {
+	grid-area: rotate-ships;
+	width: 80%;
+	justify-self: center;
+	font-size: 2rem;
+	font-weight: 600;
+	border: none;
+	background-color: #c5d8df;
 }
 
-.miss {
-	z-index: 1;
-	background-color: rgb(60, 139, 150);
+#rotate-ships:hover,
+.game-controls > button:hover {
+  cursor: grab;
+	background-color: #9eafb6;
+}
 
+#rotate-ships:active,
+.game-controls > button:active {
+  cursor: grabbing;
+	background-color: #7b888d;
 }
