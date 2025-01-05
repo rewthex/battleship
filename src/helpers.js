@@ -14,3 +14,18 @@ export const createBoards = () => {
 		computerBoard.appendChild(computerCell);
 	}
 };
+
+export const updateBoard = (player, gameboard) => {
+	const boardToUpdate = document.getElementById(`${player}-board`)
+	boardToUpdate.innerHTML = ''
+
+	for (let i = 0; i < 100; i++) {
+		const cellDiv = document.createElement('div');
+		cellDiv.classList.add('cell');
+		if (typeof gameboard[i] === 'string') {
+			cellDiv.classList.add(gameboard[i]);
+		}
+		cellDiv.dataset.id = i;
+		boardToUpdate.append(cellDiv);
+	}
+}

@@ -1,6 +1,6 @@
 import { GameEngine } from './gameengine';
 import { Draggables } from './draggables';
-import { createBoards } from './helpers';
+import { createBoards, updateBoard } from './helpers';
 import './styles.css';
 
 const ScreenController = (() => {
@@ -14,8 +14,12 @@ const ScreenController = (() => {
 	const resetButton = document.getElementById('reset-game');
 	const rotateButton = document.getElementById('rotate-ships');
 
+	const gameStatus = document.getElementById('game-status');
+
 	const updateScreen = (initialRender = false) => {
-		// updateBoard()
+		game.getPlayers().forEach((player) => {
+			updateBoard(player.name, player.gameboard.board);
+		});
 	};
 
 	function handleDrop(cell, block) {
@@ -30,8 +34,7 @@ const ScreenController = (() => {
 
 	function clickHandlerBoard(e) {
 		const cell = e.target;
-		if (!cell.dataset.id || cell.parentElement.id !== 'player-two') return;
-
+		if (!cell.dataset.id || cell.parentElement.id !== 'computer-board') return;
 		game.playRound(cell.dataset.id);
 		updateScreen();
 	}
@@ -51,10 +54,12 @@ const ScreenController = (() => {
 
 	const startGame = () => {
 		if (!game.areAllShipsSet()) {
-			playerTurnSpan.innerText = 'You are not prepared for battle!';
+			gameStatus.innerText = 'You are not prepared for battle!';
 			return;
 		}
-		gamesBoardContainer.addEventListener('click', clickHandlerBoard);
+		document
+			.getElementById('computer-board')
+			.addEventListener('click', clickHandlerBoard);
 		updateScreen();
 		draggables.disableAll();
 	};

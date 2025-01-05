@@ -12,7 +12,7 @@
 }
 
 body {
-  background-color: rgb(224, 250, 255);
+	background-color: rgb(224, 250, 255);
 	line-height: 1.5;
 	-webkit-font-smoothing: antialiased;
 }
@@ -32,20 +32,20 @@ output {
 }
 
 dialog[open] {
-  justify-self: center;
-  align-self: center;
+	justify-self: center;
+	align-self: center;
 }
 
 dialog[open]::backdrop {
-  -webkit-backdrop-filter: blur(5px);
-  backdrop-filter: blur(5px);
+	-webkit-backdrop-filter: blur(5px);
+	backdrop-filter: blur(5px);
 }
 
 .container {
 	display: grid;
 	grid-template-rows: 0.3fr 5fr 0.4fr 2.7fr;
 	grid-template-areas:
-    '.'
+		'.'
 		'game-area'
 		'.'
 		'ship-placement';
@@ -58,7 +58,7 @@ dialog[open]::backdrop {
 	grid-template-rows: 1fr 0.5fr 8fr;
 	grid-template-areas:
 		'game-status'
-    '.'
+		'.'
 		'game-boards';
 }
 
@@ -78,7 +78,7 @@ dialog[open]::backdrop {
 }
 
 .game-boards {
-  background-color: whitesmoke;
+	background-color: whitesmoke;
 	width: 75%;
 	padding: 25px;
 	grid-area: game-boards;
@@ -110,7 +110,7 @@ dialog[open]::backdrop {
 .cell {
 	width: 30px;
 	height: 30px;
-  border: 1px solid black;
+	border: 1px solid black;
 }
 
 .label {
@@ -118,8 +118,8 @@ dialog[open]::backdrop {
 	height: 30px;
 	text-align: center;
 	align-content: center;
-  font-size: 1.5rem;
-  font-weight: 600;
+	font-size: 1.5rem;
+	font-weight: 600;
 }
 
 .top-labels {
@@ -129,21 +129,21 @@ dialog[open]::backdrop {
 }
 
 .top-labels .label:first-child {
-  border: none;
+	border: none;
 }
 
 .top-labels .label:nth-child(2) {
-  border-right: 1px solid black;
+	border-right: 1px solid black;
 }
 
 .top-labels .label:nth-child(11) {
-  border-left: 1px solid black;
-  border-right: none;
+	border-left: 1px solid black;
+	border-right: none;
 }
 
-.top-labels .label:nth-child(n+3):nth-child(-n+10) {
-  border-left: 1px solid black;
-  border-right: 1px solid black;
+.top-labels .label:nth-child(n + 3):nth-child(-n + 10) {
+	border-left: 1px solid black;
+	border-right: 1px solid black;
 }
 
 .side-labels {
@@ -153,16 +153,16 @@ dialog[open]::backdrop {
 }
 
 .side-labels .label:first-child {
-  border-bottom: 1px solid black;
+	border-bottom: 1px solid black;
 }
 
 .side-labels .label:last-child {
-  border-top: 1px solid black;
+	border-top: 1px solid black;
 }
 
-.side-labels .label:nth-child(n+2):nth-child(-n+9) {
-  border-top: 1px solid black;
-  border-bottom: 1px solid black;
+.side-labels .label:nth-child(n + 2):nth-child(-n + 9) {
+	border-top: 1px solid black;
+	border-bottom: 1px solid black;
 }
 
 .game-controls {
@@ -183,7 +183,7 @@ dialog[open]::backdrop {
 }
 
 .ship-placement {
-  background-color: whitesmoke;
+	background-color: whitesmoke;
 	display: grid;
 	grid-template-rows: 4fr 1fr;
 	grid-template-areas:
@@ -255,12 +255,23 @@ dialog[open]::backdrop {
 
 #rotate-ships:hover,
 .game-controls > button:hover {
-  cursor: grab;
+	cursor: grab;
 	background-color: #9eafb6;
 }
 
 #rotate-ships:active,
 .game-controls > button:active {
-  cursor: grabbing;
+	cursor: grabbing;
 	background-color: #7b888d;
+}
+
+.hit {
+	background: red;
+	z-index: 1;
+}
+
+.miss {
+	background: blue;
+	z-index: 1;
+
 }

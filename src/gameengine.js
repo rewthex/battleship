@@ -1,7 +1,7 @@
 import { Player } from './gameclasses';
 
 export class GameEngine {
-	constructor(playerOneName = 'Player One', playerTwoName = 'Player Two') {
+	constructor(playerOneName = 'player', playerTwoName = 'computer') {
 		this.players = [
 			new Player(playerOneName, 'player-one'),
 			new Player(playerTwoName, 'player-two'),
